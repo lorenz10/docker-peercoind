@@ -36,7 +36,7 @@ and you should obtain something like this:
 
 ### Manually share Docker images across devices
 
-Create the archive: `docker save tempura > my-image.tar`__ 
+Create the archive: `docker save tempura > my-image.tar` \
 Load the archive: `docker load < my-image.tar`
 
 ### References
