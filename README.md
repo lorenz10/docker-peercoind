@@ -22,11 +22,13 @@ $ docker run -p 9903:9903 -p 9904:9904 --name testnet-tempura -d tempura \
   -maxtipage=99999999999
 ```
 
-After `-maxtipage` time has passed since genesis block creation, the node is automatically set into "initial blocks download" state, waiting to download the chain, however if all nodes are in this state then the chain gets stucked.
+After `-maxtipage` time has passed since genesis block creation the node is automatically set into "initial blocks download" state, waiting to download the chain. However if all nodes are in this state the chain gets stucked.
 
 3. Check if you can reach the defult RPC port (9904) running:
 
-`curl --user any_username:any_password --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }'  -H 'content-type: text/plain;' localhost:9904/`
+```sh
+curl --user any_username:any_password --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }'  -H 'content-type: text/plain;' localhost:9904/
+```
 
 and you should obtain something like this:
 
@@ -34,7 +36,7 @@ and you should obtain something like this:
 
 ### Manually share Docker images across devices
 
-Create the archive: `docker save tempura > my-image.tar` 
+Create the archive: `docker save tempura > my-image.tar`__ 
 Load the archive: `docker load < my-image.tar`
 
 ### References
