@@ -1,66 +1,43 @@
-# peercoin/peercoind
+# lorenz10/peercoin
 
-[![](https://images.microbadger.com/badges/image/peercoin/peercoind.svg)](https://microbadger.com/images/peercoin/peercoind "Size/Layers")
-[![Peercoin Donate](https://badgen.net/badge/peercoin/Donate/green?icon=https://raw.githubusercontent.com/peercoin/media/84710cca6c3c8d2d79676e5260cc8d1cd729a427/Peercoin%202020%20Logo%20Files/01.%20Icon%20Only/Inside%20Circle/Transparent/Green%20Icon/peercoin-icon-green-transparent.svg)](https://chainz.cryptoid.info/ppc/address.dws?p92W3t7YkKfQEPDb7cG9jQ6iMh7cpKLvwK)
+Provides a Docker image for Tempura. Requires Docker installed on your machine.
 
-Peercoind docker image. Provides a classic peercoin binary built from the [github/peercoin](https://github.com/peercoin/peercoin) repository.
+### Changes
 
-## Supported tags
+* download binaries from lorenz10/peercoin
+* `RUN make` instead of `RUN make -j4` to avoid compiler killed for memory problems
 
-See <https://hub.docker.com/r/peercoin/peercoind/tags>
+### Setup
 
-## Usage
-
-### How to use this image
-
-It behaves like a binary, so you can pass any arguments to the image and they will be forwarded to the `peercoind` binary:
+1. Clone this repo, move into `/0.10.3` folder and run `docker build -t tempura .` to compile a Docker image
+2. Create a Docker container using:
 
 ```sh
-$ docker run --name peercoind -d peercoin/peercoind \
+$ docker run -p 9903:9903 -p 9904:9904 --name testnet-tempura -d tempura \
   -rpcallowip=0.0.0.0/0 \
-  -rpcpassword=bar \
-  -rpcuser=foo
+  -rpcpassword=any_password \
+  -rpcuser=any_username \
+  -testnet=1 \
+  -addnode=xx.xx.xx.xx \
+  -maxtipage=99999999999
 ```
 
-Use the same command to start the testnet container:
+After `-maxtipage` time has passed since genesis block creation, the node is automatically set into "initial blocks download" state, waiting to download the chain, however if all nodes are in this state then the chain gets stucked.
 
-```sh
-$ docker run --name testnet-peercoind -d peercoin/peercoind \
-  -rpcallowip=0.0.0.0/0 \
-  -rpcpassword=bar \
-  -rpcuser=foo \
-  -testnet=1
-```
+3. Check if you can reach the defult RPC port (9904) running:
 
-By default, `peercoin` will run as as user `peercoin` for security reasons and store data in `/data`. If you'd like to customize where `peercoin` stores its data, use the `PPC_DATA` environment variable. The directory will be automatically created with the correct permissions for the user and `peercoin` automatically configured to use it.
+`curl --user any_username:any_password --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }'  -H 'content-type: text/plain;' localhost:9904/`
 
-```sh
-$ docker run --env PPC_DATA=/var/lib/peercoin --name peercoind -d peercoin/peercoind
-```
-
-You can also mount a host directory at `/data` like so:
-
-```sh
-$ docker run -v /opt/peercoin:/data --name peercoind -d peercoin/peercoind
-```
-That will allow access to `/data` in the container as `/opt/peercoin` on the host.
-
-```sh
-$ docker run -v ${PWD}/data:/data --name peercoind -d peercoin/peercoind
-```
-will mount the `data` sub-directory at `/data` in the container.
-
-To map container RPC ports to localhost use the `-p` argument with `docker run`:
-
-```sh
-$ docker run -p 9902:9902 --name peercoind -d peercoin/peercoind -rpcallowip=*
-```
-You may want to change the port that it is being mapped to if you already run a peercoin instance on the host.
-
-For example: `-p 9999:9902` will map container port 9902 to host port 9999.
-
-Now you will be able to `curl` peercoin in the container:
-
-`curl --user foo:bar --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }'  -H 'content-type: text/plain;' localhost:9902/`
+and you should obtain something like this:
 
 > {"result":{"chain":"main","blocks":457576,"headers":457576,"bestblockhash":"17a24a8073c8f6bc422fc4f6fe8c76da892d0693d0ad1aa499e4b9b2c047fe2b","difficulty":1710444103.933884,"mediantime":1571034759,"verificationprogress":0.9999997034325266,"initialblockdownload":false,"chainwork":"00000000000000000000000000000000000000000000000000336b3807456f56","size_on_disk":700956211,"pruned":false,"warnings":""},"error":null,"id":"curltest"}
+
+### Manually share Docker images across devices
+
+Create the archive: `docker save tempura > my-image.tar` 
+Load the archive: `docker load < my-image.tar`
+
+### References
+
+* [How to create a Docker Image](https://www.linux.com/training-tutorials/how-create-docker-image/?utm_source=pocket_mylist)
+* [How to share Docker Images with others](https://www.cloudsavvyit.com/12326/how-to-share-docker-images-with-others/?utm_source=pocket_mylist)

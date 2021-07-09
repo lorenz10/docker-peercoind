@@ -17,7 +17,7 @@ RUN mkdir -p ${BERKELEYDB_PREFIX}
 WORKDIR /${BERKELEYDB_VERSION}/build_unix
 
 RUN ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=${BERKELEYDB_PREFIX}
-RUN make -j4
+RUN make
 RUN make install
 RUN rm -rf ${BERKELEYDB_PREFIX}/docs
 
@@ -38,18 +38,16 @@ RUN apk --no-cache add autoconf \
     libtool \
     linux-headers \
     zeromq-dev \
-    protobuf-dev
+    protobuf-dev \
+    git
 
 ENV PEERCOIN_VERSION=0.10.3ppc \
     PEERCOIN_SHA=d84aca363c3038b68c7dcf0081c9833217eaaf4d62fb1cc021f86b5993ba7e1b \
     PEERCOIN_PREFIX=/opt/peercoin
 
-RUN wget -q -O peercoin.tar.gz https://github.com/peercoin/peercoin/archive/refs/tags/v${PEERCOIN_VERSION}.tar.gz \
-    && echo "${PEERCOIN_SHA}  peercoin.tar.gz" | sha256sum -c -
+RUN git clone https://github.com/lorenz10/peercoin.git tempura
 
-RUN tar -xzf peercoin.tar.gz
-
-WORKDIR /peercoin-${PEERCOIN_VERSION}
+WORKDIR /tempura
 
 # ./configure can't find berkley db unless we do this
 RUN ln -s /opt/berkleydb /usr/include/db4.8 \
@@ -67,7 +65,7 @@ RUN ./configure \
     --with-utils \
     --with-libs \
     --with-daemon
-RUN make -j4
+RUN make
 RUN make install
 RUN strip ${PEERCOIN_PREFIX}/bin/peercoin-cli
 RUN strip ${PEERCOIN_PREFIX}/bin/peercoin-tx
