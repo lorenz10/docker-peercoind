@@ -1,13 +1,16 @@
 # lorenz10/peercoin
 
-Provides a Docker Image for Tempura. Requires Docker installed on your machine.
+Creates a Docker Image with a running Tempura node. \
+Requires Docker installed on your machine.
 
 ### Changes
 
 * download binaries from lorenz10/peercoin
 * `RUN make` instead of `RUN make -j4` to avoid compiler killed for memory problems
 
-### Setup Container
+*docker-compose.yml was not configured for Tempura.*
+
+### Compile Tempura node
 
 1. Clone this repo, move into `/0.10.3` folder and run `docker build -t tempura .` to compile a Docker Image
 2. Create a Docker Container using:
@@ -18,13 +21,13 @@ $ docker run -p 9903:9903 -p 9904:9904 --name testnet-tempura -d tempura \
   -rpcpassword=any_password \
   -rpcuser=any_username \
   -testnet=1 \
-  -addnode=xx.xx.xx.xx \
-  -maxtipage=99999999999
+  -maxtipage=99999999999 \
+  -debug=1
 ```
 
-After `-maxtipage` time has passed since genesis block creation, at startup the node is automatically set into "initial blocks download" state, waiting to download the chain. However if all nodes are in this state the chain gets stucked.
+*Set "maxtipage" parameter to a very high value only in the case you want to avoid the initial blocks syncronization, that would get the node stucked if there is no other node from which downloading new blocks.*
 
-3. Check if you can reach the defult RPC port (9904) running:
+3. Check if you can reach the defult RPC port (9904) running this command:
 
 ```sh
 curl --user any_username:any_password --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }'  -H 'content-type: text/plain;' localhost:9904/
@@ -33,6 +36,8 @@ curl --user any_username:any_password --data-binary '{"jsonrpc": "1.0", "id":"cu
 and you should obtain something like this:
 
 > {"result":{"chain":"main","blocks":457576,"headers":457576,"bestblockhash":"17a24a8073c8f6bc422fc4f6fe8c76da892d0693d0ad1aa499e4b9b2c047fe2b","difficulty":1710444103.933884,"mediantime":1571034759,"verificationprogress":0.9999997034325266,"initialblockdownload":false,"chainwork":"00000000000000000000000000000000000000000000000000336b3807456f56","size_on_disk":700956211,"pruned":false,"warnings":""},"error":null,"id":"curltest"}
+
+4. Once the server is running, you can interact with the node using peercoin-cli from the host machine, connecting to the RPC port, or from Docker Desktop clicking on the "CLI" button next to the tempura image.
 
 ### Manually share Docker Images
 
