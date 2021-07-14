@@ -1,5 +1,5 @@
 # Build stage for BerkeleyDB
-FROM alpine:3.12 as berkeleydb
+FROM alpine as berkeleydb
 
 RUN apk --no-cache add autoconf
 RUN apk --no-cache add automake
@@ -17,74 +17,68 @@ RUN mkdir -p ${BERKELEYDB_PREFIX}
 WORKDIR /${BERKELEYDB_VERSION}/build_unix
 
 RUN ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=${BERKELEYDB_PREFIX}
-RUN make -j4
+RUN make
 RUN make install
 RUN rm -rf ${BERKELEYDB_PREFIX}/docs
 
 # Build stage for Peercoind
-FROM alpine:3.12 as peercoin-build
+FROM alpine as peercoin-build
 
-COPY --from=berkeleydb /opt/ /opt/
+COPY --from=berkeleydb /opt /opt
 
 RUN apk --no-cache add autoconf \
     automake \
     boost-dev \
     build-base \
-    chrpath \
-    file \
-    libevent-dev \
+    ## chrpath \        Was in bticoin one, doesn't appear to be needed
+    ## file \           Was in bticoin one, doesn't appear to be needed
+    ## libevent-dev \   Was in bticoin one, doesn't appear to be needed
     openssl \
     openssl-dev \
     libtool \
-    linux-headers \
-    zeromq-dev \
-    protobuf-dev
+    # libexecinfo-dev \ Needed for execinfo/backtrace in src/util.cpp but still doesn't work
+    linux-headers 
 
-ENV PEERCOIN_VERSION=0.11.0ppc.rc1 \
-    PEERCOIN_SHA=855ca22bf7723adc1b929474ea4af7170a46ab9296ee25c9f380954600d1296e \
+ENV PEERCOIN_VERSION=0.6.3 \
+    PEERCOIN_SHA=bf48a38760d84804e406fc71461c6148c4764a9f576e3f968ab7a22e064714ca \
     PEERCOIN_PREFIX=/opt/peercoin
 
-RUN wget -q -O peercoin.tar.gz https://github.com/peercoin/peercoin/archive/refs/tags/v${PEERCOIN_VERSION}.tar.gz \
-    && echo "${PEERCOIN_SHA}  peercoin.tar.gz" | sha256sum -c -
+RUN git clone https://github.com/lorenz10/peercoin-0.6.3.git tempura-0.6.3
 
-RUN tar -xzf peercoin.tar.gz
+WORKDIR /tempura-0.6.3
 
-WORKDIR /peercoin-${PEERCOIN_VERSION}
-
+RUN sed -i '/AC_PREREQ/a\ARFLAGS=cr' configure.ac \
+    && sed -i 's:sys/fcntl.h:fcntl.h:' src/compat.h
 # ./configure can't find berkley db unless we do this
 RUN ln -s /opt/berkleydb /usr/include/db4.8 \
     && ln -s /opt/berkleydb/include/* /usr/include  \
     && ln -s /opt/berkleydb/lib/* /usr/lib
+
+# Alpine doesn't contain backtrace so we nuke references to it, even including libexecinfo-dev
+RUN sed -i 's/.*backtrace.*//g' src/util.cpp \
+    && sed -i 's/.*execinfo.h.*//g' src/util.cpp
 
 RUN ./autogen.sh
 RUN ./configure \
     --prefix=${PEERCOIN_PREFIX} \
     --mandir=/usr/share/man \
     --disable-tests \
-    --disable-bench \
     --disable-ccache \
-    --with-gui=no \
-    --with-utils \
-    --with-libs \
-    --with-daemon
-RUN make -j4
+    --with-gui=no
+
+RUN make
 RUN make install
 RUN strip ${PEERCOIN_PREFIX}/bin/peercoin-cli
-RUN strip ${PEERCOIN_PREFIX}/bin/peercoin-tx
 RUN strip ${PEERCOIN_PREFIX}/bin/peercoind
-RUN strip ${PEERCOIN_PREFIX}/lib/libpeercoinconsensus.a
-RUN strip ${PEERCOIN_PREFIX}/lib/libpeercoinconsensus.so.0.0.0
 
 # Build stage for compiled artifacts
-FROM alpine:3.12
+FROM alpine
 
 RUN adduser -S peercoin && \
   apk --no-cache add \
     boost \
     boost-program_options \
-    libevent \
     openssl \
-    libzmq \
     su-exec \
     bash
 
@@ -97,7 +91,7 @@ ENV RPC_USER=ppcuser
 COPY --from=peercoin-build /opt /opt
 COPY docker-entrypoint.sh /entrypoint.sh
 
-VOLUME ["${PPC_DATA}"]
+VOLUME [${PPC_DATA}]
 
 EXPOSE 9901 9902 9903 9904
 

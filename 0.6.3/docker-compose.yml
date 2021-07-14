@@ -3,7 +3,7 @@ services:
   peercoind:
     build: .
     restart: always
-    image: peercoind:next
+    image: peercoind
     environment:
       - RPC_USER=peercoind
       - RPC_PASSWORD=peercoindrpc
@@ -13,8 +13,4 @@ services:
         target: /data
     command:
       -nominting
-      -rpcbind=0.0.0.0
-      -rpcallowip=0.0.0.0/0
-    ports:
-      - '9901:9901'
-      - '9903:9903'
+      -rpcallowip=*
