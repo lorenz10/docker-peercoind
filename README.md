@@ -5,7 +5,7 @@ Requires Docker installed on your machine.
 
 ### Changes
 
-* download binaries from lorenz10/peercoin
+* binaries download from lorenz10/peercoin
 * `RUN make` instead of `RUN make -j4` to avoid compiler killed for memory problems
 
 ### Setup a node
