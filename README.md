@@ -5,12 +5,14 @@ Requires Docker installed on your machine.
 
 ### Changes
 
+Forked from: [peercoin/docker-peercoind](https://github.com/peercoin/docker-peercoind.git)
+
 * binaries download from lorenz10/peercoin
 * `RUN make` instead of `RUN make -j4` to avoid compiler killed for memory problems
 
 ### Setup a node
 
-1. Clone this repo, move into `/0.10.3` folder and run `docker build -t tempura .` to compile a **Docker Image**. \
+1. Clone this repo, move into `/0.10.3` folder and run `docker build -t tempura .` to compile a **Docker Image**. 
 
 If you have already created an Image, then load it with `docker load < my-image.tar`.
 You can manually export and share your Docker Image with `docker save tempura > my-image.tar`.
