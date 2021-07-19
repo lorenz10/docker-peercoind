@@ -11,14 +11,14 @@ Requires Docker installed on your machine.
 ### Setup a node
 
 1. Clone this repo, move into `/0.10.3` folder and run `docker build -t tempura .` to compile a **Docker Image**. \
-If you already have created an Image, then load it with `docker load < my-image.tar`.
 
+If you have already created an Image, then load it with `docker load < my-image.tar`.
 You can manually export and share your Docker Image with `docker save tempura > my-image.tar`.
 
 2. Initialize and configure a **Docker Container** using:
 
 ```sh
-$ docker run -p 9903:9903 -p 9904:9904 --name testnet-tempura -d tempura \
+docker run -p 9903:9903 -p 9904:9904 --name testnet-tempura -d tempura \
   -rpcallowip=0.0.0.0/0 \
   -rpcpassword=any_password \
   -rpcuser=any_username \
@@ -28,7 +28,7 @@ $ docker run -p 9903:9903 -p 9904:9904 --name testnet-tempura -d tempura \
 
 (Riferimento altra pagina per elenco parametri di peercoind e chainparams...)
 
-*Set "maxtipage" parameter to a very high value only in the case you want to avoid the initial blocks syncronization, that would get the node stucked if there is no other node from which downloading new blocks.*
+*Set "maxtipage" parameter to a very high value only in the case you want to avoid the initial blocks syncronization of the node, that would get it stucked if there is no other node from which downloading new blocks.*
 
 3. Check if you can reach the defult RPC port (9904) running this command:
 
