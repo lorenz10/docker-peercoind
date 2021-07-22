@@ -9,7 +9,7 @@ The Dockerfile has been edited for creating a Docker Image with a running Tempur
 
 Forked from: [peercoin/docker-peercoind](https://github.com/peercoin/docker-peercoind.git)
 
-### Setup a node
+### Setup a node  :whale:
 
 1. Clone this repo, move into `/0.10.3` folder and run `docker build -t tempura .` to compile a new **Docker Image** for tempura. 
 
