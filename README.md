@@ -40,7 +40,7 @@ and you should obtain something like this:
 
 4. Once the server is running, you can interact with the node using **peercoin-cli** from the host machine, since is performed port-forwarding of the guest OS, or, from the Container itself, opening Docker Desktop and clicking on the "CLI" button next to the corresponding Container.
 
-### References
+### References :books:
 
 * [How to create a Docker Image](https://www.linux.com/training-tutorials/how-create-docker-image/?utm_source=pocket_mylist)
 * [How to share Docker Images with others](https://www.cloudsavvyit.com/12326/how-to-share-docker-images-with-others/?utm_source=pocket_mylist)
