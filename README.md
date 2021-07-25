@@ -7,8 +7,6 @@ The Dockerfile has been edited for creating a Docker Image with a running Tempur
 * download tempura binaries instead of peercoin ones
 * `RUN make` instead of `RUN make -j4` to avoid compiler killed for having too many threads
 
-Forked from: [peercoin/docker-peercoind](https://github.com/peercoin/docker-peercoind.git)
-
 ### Setup a node  :whale:
 
 1. Clone this repo, move into `/0.10.3` folder and run `docker build -t tempura .` to compile a new **Docker Image** for tempura. 
@@ -42,5 +40,7 @@ and you should obtain something like this:
 
 ### References :books:
 
+* Forked from: [peercoin/docker-peercoind](https://github.com/peercoin/docker-peercoind.git)
 * [How to create a Docker Image](https://www.linux.com/training-tutorials/how-create-docker-image/?utm_source=pocket_mylist)
 * [How to share Docker Images with others](https://www.cloudsavvyit.com/12326/how-to-share-docker-images-with-others/?utm_source=pocket_mylist)
+
