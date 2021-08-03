@@ -52,7 +52,7 @@ To run ElectumX alone try: `docker run -v <PATH_TO_DIR>:/data -e DAEMON_URL=<USE
 
 ### Share Images across devices :computer:
 
-You can manually export and share your Docker Images with `docker save tempura > my-image.tar` and you can load them on another machine using `docker load < my-image.tar`.
+You can create a Docker Account and add a new [Repository](https://docs.docker.com/docker-hub/repos/) where you can pull and push Images, or you can manually export and share your Docker Images with `docker save tempura > my-image.tar` and load them on another machine using `docker load < my-image.tar`.
 
 ### References :books:
 
