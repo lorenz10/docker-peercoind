@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   peercoind:
-    image: tempura
+    image: lorenz10/tempura:0.10.1
     restart: always
     environment:
       - RPC_USER=lore
@@ -19,7 +19,7 @@ services:
       -printtoconsole
       -testnet=1
   electrumx:
-    image: electrumx
+    image: lorenz10/electrumx:1.16.0
     environment:
       - DAEMON_URL=lore:botti@peercoind:9904
       - COIN=TempuraTestnet
