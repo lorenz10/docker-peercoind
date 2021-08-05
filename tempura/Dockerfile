@@ -45,7 +45,8 @@ ENV PEERCOIN_VERSION=0.10.3ppc \
     PEERCOIN_SHA=d84aca363c3038b68c7dcf0081c9833217eaaf4d62fb1cc021f86b5993ba7e1b \
     PEERCOIN_PREFIX=/opt/peercoin
 
-RUN git clone https://github.com/lorenz10/peercoin.git tempura
+RUN git clone --single-branch --branch release-0.10 \
+    https://github.com/lorenz10/peercoin.git tempura
 
 WORKDIR /tempura
 

@@ -1,14 +1,14 @@
 version: '3.5'
 services:
   peercoind:
-    image: lorenz10/tempura:0.10.1
+    image: lorenz10/tempura:tag
     restart: always
     environment:
       - RPC_USER=lore
       - RPC_PASSWORD=botti
     volumes:
       - type: bind
-        source: /Users/lorenzobottini/electrum-data/peercoin
+        source: /path/to/directory/peercoin
         target: /data
     ports:
       - "9903:9903"
@@ -31,7 +31,7 @@ services:
       - SSL_KEYFILE=/data/privkey.pem
     volumes:
       - type: bind
-        source: /Users/lorenzobottini/electrum-data/db
+        source: /path/to/directory/db
         target: /data
     ports:
       - "50001:50001"
