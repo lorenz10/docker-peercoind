@@ -1,14 +1,14 @@
 version: '3.5'
 services:
   peercoind:
-    image: lorenz10/tempura:tag
+    image: lorenz10/tempura:0.10.4
     restart: always
     environment:
-      - RPC_USER=lore
-      - RPC_PASSWORD=botti
+      - RPC_USER=<USER>
+      - RPC_PASSWORD=<PASSWORD>
     volumes:
       - type: bind
-        source: /path/to/directory/peercoin
+        source: ~/directory/tempura
         target: /data
     ports:
       - "9903:9903"
@@ -21,8 +21,8 @@ services:
   electrumx:
     image: lorenz10/electrumx:1.16.0
     environment:
-      - DAEMON_URL=lore:botti@peercoind:9904
-      - COIN=TempuraTestnet
+      - DAEMON_URL=<USER>:<PASSWORD>@peercoind:9904
+      - COIN=TempuraTestnet #added in my electrumx fork
       - NET=testnet
       - DB_DIRECTORY=/data
       - CACHE_MB=400
@@ -31,7 +31,7 @@ services:
       - SSL_KEYFILE=/data/privkey.pem
     volumes:
       - type: bind
-        source: /path/to/directory/db
+        source: ~/directory/db
         target: /data
     ports:
       - "50001:50001"
@@ -40,4 +40,4 @@ services:
       - "8000:8000"
     restart: always
     depends_on:
-      - peercoind # name of the process executed 
+      - peercoind #name of the process
