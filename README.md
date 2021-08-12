@@ -57,7 +57,7 @@ The actual configuration of the Dockerfile requires Tempura and ElectrumX alread
 
 1. Move into `btc-rpc-explorer` folder and run `docker build -t btc-rpc-explorer .` to compile a new **Docker Image** for the Explorer. 
 
-2. Initialize and configure a **Docker Container** using: `docker run -it -p 80:80  -d lorenz10/btc-rpc-explorer:3.1.1` and if your hosting machine is Linux add the option `--add-host=host.docker.internal:host-gateway` to set host.docker.internal variable as the localhost IP of your machine (which is done automatically on MacOS and Win), to be able to connect to local ports where the other services are listening.
+2. Initialize and configure a **Docker Container** using: `docker run -it -p 80:80  -d btc-rpc-explorer` and if your hosting machine is Linux add the option `--add-host=host.docker.internal:host-gateway` to set host.docker.internal variable as the localhost IP of your machine (which is done automatically on MacOS and Win), to be able to connect to local ports where the other services are listening.
 
 Now, if everything went right, you should be able to connect to your server and see the Explorer.
 
