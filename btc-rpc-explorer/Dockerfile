@@ -1,6 +1,6 @@
 FROM node:16.6.1-alpine3.12
 RUN apk --no-cache add git
-RUN git clone --single-branch --branch master \
+RUN git clone --single-branch --branch release-3 \
     https://github.com/lorenz10/btc-rpc-explorer.git btc-rpc-explorer
 WORKDIR /btc-rpc-explorer
 RUN echo -e 'BTCEXP_BITCOIND_HOST=host.docker.internal \
