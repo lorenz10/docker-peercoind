@@ -2,6 +2,7 @@ version: '3.5'
 services:
   peercoind:
     image: lorenz10/tempura:0.10.4
+    container_name: peercoin
     restart: always
     environment:
       - RPC_USER=<USER>
@@ -18,8 +19,10 @@ services:
       -nominting
       -printtoconsole
       -testnet=1
+      -maxtipage=9999999
   electrumx:
     image: lorenz10/electrumx:1.16.0
+    container_name: electrumx
     environment:
       - DAEMON_URL=<USER>:<PASSWORD>@peercoind:9904
       - COIN=TempuraTestnet #added in my electrumx fork
@@ -27,12 +30,15 @@ services:
       - DB_DIRECTORY=/data
       - CACHE_MB=400
       - SERVICES=tcp://:50001,ssl://:50002,wss://:50004,rpc://0.0.0.0:8000
-      - SSL_CERTFILE=/data/fullchain.pem
-      - SSL_KEYFILE=/data/privkey.pem
+      - SSL_CERTFILE=/cert/fullchain.pem
+      - SSL_KEYFILE=/cert/privkey.pem
     volumes:
       - type: bind
         source: ~/directory/db
         target: /data
+      - type: bind
+        source: ~/directory/certificates
+        target: /cert
     ports:
       - "50001:50001"
       - "50002:50002"
@@ -40,4 +46,14 @@ services:
       - "8000:8000"
     restart: always
     depends_on:
-      - peercoind #name of the process
+      - peercoind
+  btc-rpc-explorer:
+    image: lorenz10/btc-rpc-explorer:3.2.0  # this image is terrible, I know :(
+    container_name: explorer
+    ports:
+      - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+    depends_on:
+      - electrumx
