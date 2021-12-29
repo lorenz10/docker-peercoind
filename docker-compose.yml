@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   peercoind:
-    image: lorenz10/tempura:0.10.4
+    image: n3srl/tempura:0.10.4
     container_name: peercoin
     restart: always
     environment:
@@ -21,11 +21,11 @@ services:
       -testnet=1
       -maxtipage=9999999
   electrumx:
-    image: lorenz10/electrumx:1.16.0
+    image: n3srl/electrumx:1.16.0
     container_name: electrumx
     environment:
       - DAEMON_URL=<USER>:<PASSWORD>@peercoind:9904
-      - COIN=TempuraTestnet #added in my electrumx fork
+      - COIN=TempuraTestnet
       - NET=testnet
       - DB_DIRECTORY=/data
       - CACHE_MB=400
@@ -48,8 +48,12 @@ services:
     depends_on:
       - peercoind
   btc-rpc-explorer:
-    image: lorenz10/btc-rpc-explorer:3.2.0  # this image is terrible, I know :(
+    image: n3srl/btc-rpc-explorer:3.2.0
     container_name: explorer
+    volumes:
+      - type: bind
+        source: /path/to/.env
+        target: /btc-rpc-explorer/.env
     ports:
       - "80:80"
     extra_hosts:

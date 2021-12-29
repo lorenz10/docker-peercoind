@@ -6,9 +6,8 @@ ENV _VERSION=1.16.0
 
 COPY ./bin /usr/local/bin
 
-RUN apk --no-cache add git
-
-RUN git clone https://github.com/lorenz10/electrumx.git electrumx
+RUN apk --no-cache add git \
+    && git clone https://github.com/n3srl/electrumx.git electrumx
 
 WORKDIR /electrumx
 

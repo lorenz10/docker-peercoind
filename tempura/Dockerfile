@@ -38,15 +38,15 @@ RUN apk --no-cache add autoconf \
     libtool \
     linux-headers \
     zeromq-dev \
-    protobuf-dev \
-    git
+    protobuf-dev
 
 ENV PEERCOIN_VERSION=0.10.3ppc \
     PEERCOIN_SHA=d84aca363c3038b68c7dcf0081c9833217eaaf4d62fb1cc021f86b5993ba7e1b \
     PEERCOIN_PREFIX=/opt/peercoin
 
-RUN git clone --single-branch --branch release-0.10 \
-    https://github.com/lorenz10/peercoin.git tempura
+RUN apk --no-cache add git \
+    && git clone --single-branch --branch release-0.10 \
+    https://github.com/n3srl/peercoin.git tempura
 
 WORKDIR /tempura
 
